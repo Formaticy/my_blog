@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,11 +46,39 @@ INSTALLED_APPS = [
     'django.contrib.sites',  # Для установки фреймворка карт сайтов
     'django.contrib.sitemaps',  # Для установки фреймворка карт сайтов
     'django.contrib.postgres',  # Для доп функций постгреса (используем поиск Post.objects.filter(title__search='пост'))
-    'accounts.apps.AccountsConfig', # Приложения для регистрации пользователей
-    'social_django', # Для OAuth
-    'django_summernote', # Для WYSIWYG summernote
-    'django_bootstrap5', # Bootstrap5
+    'accounts.apps.AccountsConfig',  # Приложения для регистрации пользователей
+    'social_django',  # Для OAuth
+    'django_summernote',  # Для WYSIWYG summernote
+    'django_bootstrap5',  # Bootstrap5
+    # API new
+    'rest_framework',
+    'blog_api.apps.BlogApiConfig',
+    'django_filters',
+    'rest_framework.authtoken', # Для использования схемы TokenAuthentication
+    'drf_spectacular',
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3,
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Blog API Project",
+    "DESCRIPTION": "A sample blog to learn about DRF",
+    "VERSION": "1.0.0",
+    # OTHER SETTINGS
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -154,7 +183,7 @@ LOGIN_REDIRECT_URL = '/'
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
 
 # Путь к каталогу, где хранятся загруженные файлы
-MEDIA_ROOT = BASE_DIR/'media'
+MEDIA_ROOT = BASE_DIR / 'media'
 # Базовый url адрес для обслуживания медиа файлов
 MEDIA_URL = '/media/'
 
